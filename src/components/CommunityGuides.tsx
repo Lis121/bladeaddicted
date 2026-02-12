@@ -4,20 +4,23 @@ import styles from './CommunityGuides.module.css';
 const DUMPS = [
     {
         id: '1',
-        image: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
-        title: 'The Best Community EDC Gear: Pocket Dump from @ruben_b_caeiro',
+        // Knife/EDC themed image
+        image: 'https://images.unsplash.com/photo-1588405748880-12d1d2a59d75?auto=format&fit=crop&w=800&q=80',
+        title: 'Top 5 Folding Knives for 2026: The Ultimate Guide',
         category: 'GUIDES'
     },
     {
         id: '2',
-        image: 'https://images.unsplash.com/photo-1621252179027-94459d27d3ee',
-        title: 'The Best Community EDC Gear: Pocket Dump from Stephen',
+        // Steel/Technical themed image
+        image: 'https://images.unsplash.com/photo-1563273941-ce9a3029cba3?auto=format&fit=crop&w=800&q=80',
+        title: 'Understanding Blade Steels: Magnacut vs M390',
         category: 'GUIDES'
     },
     {
         id: '3',
-        image: 'https://images.unsplash.com/photo-1616422285623-13ff0162193c',
-        title: 'The Best Community EDC Gear: Pocket Dump from kamren',
+        // Maintenance/Sharpening themed image
+        image: 'https://images.unsplash.com/photo-1595188800910-746a5127602e?auto=format&fit=crop&w=800&q=80',
+        title: 'How to Sharpen Your Knife Like a Pro',
         category: 'GUIDES'
     }
 ];

@@ -13,7 +13,7 @@ const robotoCondensed = Roboto_Condensed({
 });
 
 export const metadata: Metadata = {
-  title: "BladeAddicted - Premium EDC Gear & Knife Reviews",
+  title: "BladeAddicted • Premium Knives & EDC",
   description: "The ultimate resource for EDC knives, tactical folders, and outdoor blades. Discover the best gear for your carry.",
 };
 
