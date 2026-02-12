@@ -30,7 +30,7 @@ const getProduct = async (id: string) => {
         '1': {
             id: '1',
             name: 'Spyderco Para 3',
-            videoId: 'dQw4w9WgXcQ',
+            videoId: 'JUaAy-vX4JM',
             description: 'The Para 3 distills all the best features of the legendary Para Military 2 into a more compact, carry-friendly format.',
             specs: [
                 { label: 'Blade Length', value: '2.95"' },
