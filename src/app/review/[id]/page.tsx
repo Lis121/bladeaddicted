@@ -4,6 +4,8 @@ import SpecSheet from '@/components/SpecSheet';
 import Comparison from '@/components/Comparison';
 import styles from './page.module.css';
 
+export const runtime = 'edge';
+
 // Mock data fetcher
 const getProduct = async (id: string) => {
     // Simulate async fetch
