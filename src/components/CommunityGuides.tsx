@@ -26,7 +26,7 @@ const CommunityGuides = () => {
     return (
         <section className={styles.section}>
             <header className={styles.header}>
-                <h2 className={styles.title}>THE LATEST COMMUNITY GUIDES</h2>
+                <h2 className={styles.title}>THE LATEST GUIDES</h2>
             </header>
 
             <div className={styles.grid}>
