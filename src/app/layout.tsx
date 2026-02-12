@@ -26,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${robotoCondensed.variable} antialiased`}>
+      <body className={`${inter.variable} ${robotoCondensed.variable} antialiased`} suppressHydrationWarning={true}>
         <Header />
         <main>{children}</main>
       </body>
