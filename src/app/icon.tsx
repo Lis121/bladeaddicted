@@ -13,7 +13,7 @@ export const contentType = 'image/png';
 // Image generation
 export default async function Icon() {
     const fontData = await fetch(
-        new URL('http://fonts.gstatic.com/s/robotocondensed/v13/b9QBgL0iMZfDSpmcXcE8nDokq8qT6AIiNJ07Vf_NrVA.ttf', import.meta.url)
+        'https://fonts.gstatic.com/s/robotocondensed/v13/b9QBgL0iMZfDSpmcXcE8nDokq8qT6AIiNJ07Vf_NrVA.ttf'
     ).then((res) => res.arrayBuffer());
 
     return new ImageResponse(
