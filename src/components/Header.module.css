@@ -11,29 +11,17 @@
 }
 
 .logo {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    text-decoration: none;
-    /* Ensure no underline on the container */
-}
-
-.logoText {
     font-family: var(--font-roboto);
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--text-primary);
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    line-height: 1;
-    /* Fix vertical alignment issues */
 }
 
-.logoText span {
+.logo span {
     color: var(--accent-primary);
 }
-
-
 
 .nav {
     display: flex;

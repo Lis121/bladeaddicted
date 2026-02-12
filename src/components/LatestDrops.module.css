@@ -1,0 +1,133 @@
+.section {
+    padding: 4rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.title {
+    font-family: var(--font-roboto);
+    font-size: 2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding-left: 1rem;
+    border-left: 4px solid var(--accent-primary);
+    color: var(--foreground);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+.card {
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 2rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 300px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    text-decoration: none;
+    color: var(--foreground);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent-primary);
+}
+
+.priceTag {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: var(--accent-primary);
+    color: #000;
+    font-weight: bold;
+    padding: 0.25rem 0.5rem;
+    border-radius: 2px;
+    font-size: 0.9rem;
+}
+
+.modelNameHuge {
+    font-size: 3.5rem;
+    font-weight: 900;
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    line-height: 1;
+    background: linear-gradient(180deg, #fff 0%, #888 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0.9;
+}
+
+/* Specific colors for specific models just for the vibe, can be dynamic later */
+.card:nth-child(1) .modelNameHuge {
+    background: linear-gradient(180deg, #ffaa00 0%, #cc8800 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.card:nth-child(2) .modelNameHuge {
+    background: linear-gradient(180deg, #ffffff 0%, #aaaaaa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.card:nth-child(3) .modelNameHuge {
+    background: linear-gradient(180deg, #00ff00 0%, #008800 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.card:nth-child(4) .modelNameHuge {
+    background: linear-gradient(180deg, #800080 0%, #4b004b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.productName {
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #333;
+    padding-bottom: 0.5rem;
+}
+
+.specs {
+    display: flex;
+    gap: 2rem;
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.specItem {
+    display: flex;
+    flex-direction: column;
+}
+
+.specLabel {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 0.2rem;
+}
+
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}

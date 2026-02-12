@@ -1,0 +1,91 @@
+.section {
+    padding: 4rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.header {
+    margin-bottom: 3rem;
+    padding: 1rem;
+    border: 1px solid #333;
+    display: inline-block;
+    width: 100%;
+}
+
+.title {
+    font-family: var(--font-roboto);
+    font-size: 1.5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin: 0;
+    letter-spacing: 0.05em;
+    color: #fff;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    text-align: left;
+}
+
+.card {
+    text-decoration: none;
+    color: var(--foreground);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+.imageContainer {
+    position: relative;
+    aspect-ratio: 4/3;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.card:hover .image {
+    transform: scale(1.05);
+}
+
+.category {
+    color: #666;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.articleTitle {
+    font-family: var(--font-roboto);
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Specific styling for the mocked 'community' feel */
+.imageContainer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 50%);
+    opacity: 0.5;
+}
