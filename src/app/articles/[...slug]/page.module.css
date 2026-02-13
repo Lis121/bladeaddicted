@@ -3,8 +3,14 @@
     max-width: 896px;
     /* max-w-4xl */
     margin: 0 auto;
-    padding: 3rem 1rem;
+    padding: 1.5rem 1rem;
     /* py-12 px-4 */
+}
+
+/* Add space between title (which is now part of content) and video */
+.content> :first-child {
+    margin-top: 0;
+    margin-bottom: 3rem;
 }
 
 .title {
