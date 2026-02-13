@@ -14,10 +14,10 @@ const FEATURED_PRODUCTS = [
   {
     id: '2',
     name: 'Chris Reeve Sebenza 31',
-    image: 'https://placehold.co/600x400/222/white?text=Sebenza',
-    steel: 'Magnacut',
-    lock: 'Frame Lock',
-    price: '$500'
+    image: 'https://img.youtube.com/vi/M3c3h4sZ9k0/maxresdefault.jpg',
+    steel: 'CPM S45VN',
+    lock: 'Reeve Integral Lock',
+    price: '$450'
   },
   {
     id: '3',

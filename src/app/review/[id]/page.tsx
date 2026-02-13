@@ -7,43 +7,7 @@ import styles from './page.module.css';
 export const runtime = 'edge';
 
 // Mock data fetcher
-const getProduct = async (id: string) => {
-    // Simulate async fetch
-    const products: Record<string, any> = {
-        'benchmade-bugout-535': {
-            id: 'benchmade-bugout-535',
-            name: 'Benchmade Bugout 535',
-            videoId: 'dQw4w9WgXcQ',
-            description: 'The Benchmade Bugout 535 is designed for the modern outdoor adventurer, incorporating the lightest, best performing materials in an extremely slim yet ergonomic package.',
-            specs: [
-                { label: 'Blade Length', value: '3.24"' },
-                { label: 'Blade Thickness', value: '0.090"' },
-                { label: 'Open Length', value: '7.46"' },
-                { label: 'Closed Length', value: '4.22"' },
-                { label: 'Weight', value: '1.85oz' },
-                { label: 'Handle Thickness', value: '0.42"' },
-                { label: 'Blade Style', value: 'Drop Point' },
-                { label: 'Blade Steel', value: 'CPM-S30V Premium Stainless Steel' },
-                { label: 'Lock Type', value: 'AXIS Lock' },
-            ]
-        },
-        '1': {
-            id: '1',
-            name: 'Spyderco Para 3',
-            videoId: 'JUaAy-vX4JM',
-            description: 'The Para 3 distills all the best features of the legendary Para Military 2 into a more compact, carry-friendly format.',
-            specs: [
-                { label: 'Blade Length', value: '2.95"' },
-                { label: 'Overall Length', value: '7.24"' },
-                { label: 'Weight', value: '3.40 oz' },
-                { label: 'Blade Steel', value: 'CPM S45VN' },
-                { label: 'Lock Type', value: 'Compression Lock' },
-            ]
-        }
-    };
-
-    return products[id];
-};
+import { getProduct } from '@/lib/products';
 
 export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
