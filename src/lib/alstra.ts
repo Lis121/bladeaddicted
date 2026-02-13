@@ -128,3 +128,53 @@ export async function fetchRandomGuidesWithThumbnails(count: number = 12): Promi
 
     return detailedGuides;
 }
+
+/**
+ * Fetches additional guides, excluding specific slugs to avoid duplicates
+ */
+export async function fetchGuidesExcluding(count: number, excludeSlugs: string[]): Promise<Guide[]> {
+    // 1. Get all guides
+    const allGuides = await fetchAllGuides();
+
+    if (allGuides.length === 0) return [];
+
+    // 2. Filter out excluded slugs
+    const available = allGuides.filter(g => !excludeSlugs.includes(g.slug));
+
+    // 3. Shuffle and select 'count' items
+    const shuffled = available.sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, count);
+
+    // 4. Fetch details for selected items (reusing logic would be better, but copying for safety/simplicity in this step)
+    const BATCH_SIZE = 5;
+    const detailedGuides: Guide[] = [];
+
+    for (let i = 0; i < selected.length; i += BATCH_SIZE) {
+        const batch = selected.slice(i, i + BATCH_SIZE);
+
+        const batchResults = await Promise.all(
+            batch.map(async (guide) => {
+                const details = await fetchGuideContent(guide.slug);
+                let thumbnail = null;
+
+                if (details && details.contentHtml) {
+                    const videoId = getYoutubeVideoId(details.contentHtml);
+                    if (videoId) {
+                        thumbnail = getBestYoutubeThumbnail(videoId);
+                    }
+                }
+
+                return {
+                    ...guide,
+                    thumbnail: thumbnail || 'https://placehold.co/600x400/222/333?text=Review',
+                    url: `/guides/${guide.slug}`,
+                    schema: details?.schema || {}
+                };
+            })
+        );
+
+        detailedGuides.push(...batchResults);
+    }
+
+    return detailedGuides;
+}
