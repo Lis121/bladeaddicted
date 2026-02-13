@@ -7,7 +7,7 @@ export const revalidate = 3600;
 export const runtime = 'edge';
 
 export default async function Home() {
-  const guides = await fetchRandomGuidesWithThumbnails(10);
+  const guides = await fetchRandomGuidesWithThumbnails(30);
 
   // Map guides to ProductCard format
   const products = guides.map(guide => ({
@@ -31,7 +31,7 @@ export default async function Home() {
           borderLeft: '4px solid var(--accent-primary)',
           paddingLeft: '1rem'
         }}>
-          Latest Drops
+          LATEST GUIDES
         </h2>
         <ProductGrid products={products} />
       </div>
