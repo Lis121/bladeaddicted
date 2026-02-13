@@ -12,9 +12,9 @@ export interface Guide {
 }
 
 /**
- * Fetches proper YouTube thumbnail from HTML content
+ * Extracts YouTube Video ID from HTML content
  */
-export function getYoutubeThumbnail(htmlContent: string): string | null {
+export function getYoutubeVideoId(htmlContent: string): string | null {
     // Look for various YouTube embed patterns
     const patterns = [
         /youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
@@ -26,11 +26,38 @@ export function getYoutubeThumbnail(htmlContent: string): string | null {
     for (const pattern of patterns) {
         const match = htmlContent.match(pattern);
         if (match && match[1]) {
-            return `https://img.youtube.com/vi/${match[1]}/maxresdefault.jpg`;
+            return match[1];
         }
     }
 
     return null;
+}
+
+/**
+ * Checks if a URL exists (status 200)
+ */
+async function checkUrlExists(url: string): Promise<boolean> {
+    try {
+        const res = await fetch(url, { method: 'HEAD', signal: AbortSignal.timeout(2000) });
+        return res.ok;
+    } catch (e) {
+        return false;
+    }
+}
+
+/**
+ * Gets the best available thumbnail URL for a YouTube video
+ */
+export async function getBestYoutubeThumbnail(videoId: string): Promise<string> {
+    const maxResIndex = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+    const hqIndex = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+
+    // Optimistically verify maxres
+    if (await checkUrlExists(maxResIndex)) {
+        return maxResIndex;
+    }
+
+    return hqIndex;
 }
 
 /**
@@ -92,7 +119,10 @@ export async function fetchRandomGuidesWithThumbnails(count: number = 10): Promi
             let thumbnail = null;
 
             if (details && details.contentHtml) {
-                thumbnail = getYoutubeThumbnail(details.contentHtml);
+                const videoId = getYoutubeVideoId(details.contentHtml);
+                if (videoId) {
+                    thumbnail = await getBestYoutubeThumbnail(videoId);
+                }
             }
 
             // If no thumbnail found, use a fallback specific to knifes/EDC if possible, or generic
