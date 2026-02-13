@@ -9,7 +9,7 @@ const ProductCard = ({ product }: { product: any }) => {
         <Link href={productUrl} className={styles.card}>
             <div className={styles.imageContainer}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={product.image} alt={product.name} className={styles.image} />
+                <img src={product.image} alt={product.name} className={styles.image} loading="lazy" decoding="async" />
                 <span className={styles.priceTag}>{product.price}</span>
             </div>
             <div className={styles.content}>

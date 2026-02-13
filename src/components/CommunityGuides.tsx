@@ -37,7 +37,7 @@ const CommunityGuides = () => {
                     <Link href={`#${dump.id}`} key={dump.id} className={styles.card}>
                         <div className={styles.imageContainer}>
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={dump.image} alt={dump.title} className={styles.image} />
+                            <img src={dump.image} alt={dump.title} className={styles.image} loading="lazy" decoding="async" />
                         </div>
 
                         <div className={styles.content}>

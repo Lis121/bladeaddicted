@@ -34,7 +34,7 @@ const Comparison = ({ currentProductId }: ComparisonProps) => {
                     <Link href={`/review/${product.id}`} key={product.id} className={styles.card}>
                         <div className={styles.imageContainer}>
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={product.image} alt={product.name} className={styles.image} />
+                            <img src={product.image} alt={product.name} className={styles.image} loading="lazy" decoding="async" />
                             <span className={styles.badge}>{product.difference}</span>
                         </div>
                         <div className={styles.content}>
