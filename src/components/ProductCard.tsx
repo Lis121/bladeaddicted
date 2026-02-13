@@ -29,7 +29,6 @@ const ProductCard = ({ product }: { product: any }) => {
                     decoding="async"
                     onError={handleImageError}
                 />
-                <span className={styles.priceTag}>{product.price}</span>
             </div>
             <div className={styles.content}>
                 <h3 className={styles.title}>{product.name}</h3>
