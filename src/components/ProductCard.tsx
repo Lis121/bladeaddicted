@@ -12,19 +12,19 @@ const ProductCard = ({ product }: { product: any }) => {
     const handleImageError = () => {
         if (!imageSrc) return;
 
-        // Fallback chain: maxresdefault -> sddefault -> hqdefault -> placeholder
+        // Fallback chain: maxresdefault -> sddefault -> hqdefault -> logo
         if (imageSrc.includes('maxresdefault.jpg')) {
             setImageSrc(imageSrc.replace('maxresdefault.jpg', 'sddefault.jpg'));
         } else if (imageSrc.includes('sddefault.jpg')) {
             setImageSrc(imageSrc.replace('sddefault.jpg', 'hqdefault.jpg'));
-        } else if (imageSrc.includes('hqdefault.jpg')) {
-            // Final fallback if even hqdefault fails
-            setImageSrc('https://placehold.co/600x400/222/333?text=No+Image');
         } else {
-            // If it's already a placeholder or unknown format and fails, just leave it or set generic
-            setImageSrc('https://placehold.co/600x400/222/333?text=No+Image');
+            // Final fallback: local logo
+            setImageSrc('/logo.png');
         }
     };
+
+    // Check if we are showing the fallback logo to apply specific styles
+    const isFallback = imageSrc === '/logo.png';
 
     return (
         <Link href={productUrl} className={styles.card}>
@@ -33,7 +33,7 @@ const ProductCard = ({ product }: { product: any }) => {
                 <img
                     src={imageSrc}
                     alt={product.name}
-                    className={styles.image}
+                    className={isFallback ? styles.fallbackImage : styles.image}
                     loading="lazy"
                     decoding="async"
                     onError={handleImageError}

@@ -31,6 +31,16 @@
     opacity: 0.9;
 }
 
+.fallbackImage {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 2rem;
+    background-color: var(--bg-tertiary);
+    transition: transform 0.3s ease;
+    opacity: 0.8;
+}
+
 .card:hover .image {
     transform: scale(1.05);
     opacity: 1;
