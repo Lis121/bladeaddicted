@@ -83,7 +83,7 @@ async function fetchGuideContent(slug: string): Promise<any> {
 /**
  * Main function to get random guides with thumbnails
  */
-export async function fetchRandomGuidesWithThumbnails(count: number = 30): Promise<Guide[]> {
+export async function fetchRandomGuidesWithThumbnails(count: number = 12): Promise<Guide[]> {
     // 1. Get all guides
     const allGuides = await fetchAllGuides();
 
