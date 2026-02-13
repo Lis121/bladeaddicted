@@ -10,11 +10,20 @@ const ProductCard = ({ product }: { product: any }) => {
     const [imageSrc, setImageSrc] = useState(product.image);
 
     const handleImageError = () => {
-        // If current image is maxresdefault, try hqdefault
-        if (imageSrc && imageSrc.includes('maxresdefault.jpg')) {
-            setImageSrc(imageSrc.replace('maxresdefault.jpg', 'hqdefault.jpg'));
+        if (!imageSrc) return;
+
+        // Fallback chain: maxresdefault -> sddefault -> hqdefault -> placeholder
+        if (imageSrc.includes('maxresdefault.jpg')) {
+            setImageSrc(imageSrc.replace('maxresdefault.jpg', 'sddefault.jpg'));
+        } else if (imageSrc.includes('sddefault.jpg')) {
+            setImageSrc(imageSrc.replace('sddefault.jpg', 'hqdefault.jpg'));
+        } else if (imageSrc.includes('hqdefault.jpg')) {
+            // Final fallback if even hqdefault fails
+            setImageSrc('https://placehold.co/600x400/222/333?text=No+Image');
+        } else {
+            // If it's already a placeholder or unknown format and fails, just leave it or set generic
+            setImageSrc('https://placehold.co/600x400/222/333?text=No+Image');
         }
-        // If it's already hqdefault or something else, we let it be broken or could set a placeholder
     };
 
     return (
