@@ -7,7 +7,7 @@ export const revalidate = 3600;
 export const runtime = 'edge';
 
 export default async function Home() {
-  const guides = await fetchRandomGuidesWithThumbnails(50);
+  const guides = await fetchRandomGuidesWithThumbnails(30);
 
   // Map guides to ProductCard format
   const products = guides.map(guide => ({

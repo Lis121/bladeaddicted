@@ -1,15 +1,34 @@
+"use client";
+
 import Link from 'next/link';
+import { useState } from 'react';
 import styles from './ProductCard.module.css';
 
 // Using a simple img tag for placeholder. In production, use Next.js Image component.
 const ProductCard = ({ product }: { product: any }) => {
     const productUrl = product.url || `/review/${product.id}`;
+    const [imageSrc, setImageSrc] = useState(product.image);
+
+    const handleImageError = () => {
+        // If current image is maxresdefault, try hqdefault
+        if (imageSrc && imageSrc.includes('maxresdefault.jpg')) {
+            setImageSrc(imageSrc.replace('maxresdefault.jpg', 'hqdefault.jpg'));
+        }
+        // If it's already hqdefault or something else, we let it be broken or could set a placeholder
+    };
 
     return (
         <Link href={productUrl} className={styles.card}>
             <div className={styles.imageContainer}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={product.image} alt={product.name} className={styles.image} loading="lazy" decoding="async" />
+                <img
+                    src={imageSrc}
+                    alt={product.name}
+                    className={styles.image}
+                    loading="lazy"
+                    decoding="async"
+                    onError={handleImageError}
+                />
                 <span className={styles.priceTag}>{product.price}</span>
             </div>
             <div className={styles.content}>
