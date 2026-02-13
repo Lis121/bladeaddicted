@@ -19,7 +19,8 @@ export function getYoutubeThumbnail(htmlContent: string): string | null {
     const patterns = [
         /youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
         /youtu\.be\/([a-zA-Z0-9_-]{11})/,
-        /youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/
+        /youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
+        /youtube-nocookie\.com\/embed\/([a-zA-Z0-9_-]{11})/
     ];
 
     for (const pattern of patterns) {
@@ -39,7 +40,8 @@ async function fetchAllGuides(): Promise<Guide[]> {
     try {
         // Fetch with a high limit to get all guides
         const res = await fetch(`${SAAS_API_URL}/api/public/pages?projectId=${PROJECT_ID}&type=pseo&limit=100`, {
-            next: { revalidate: 3600 }
+            next: { revalidate: 3600 },
+            signal: AbortSignal.timeout(8000) // 8s timeout
         });
 
         if (!res.ok) return [];
@@ -59,6 +61,7 @@ async function fetchGuideContent(slug: string): Promise<any> {
     try {
         const res = await fetch(`${SAAS_API_URL}/api/public/content?projectId=${PROJECT_ID}&slug=${slug}`, {
             next: { revalidate: 3600 },
+            signal: AbortSignal.timeout(5000) // 5s timeout
         });
 
         if (!res.ok) return null;
