@@ -1,43 +1,25 @@
 
 import ProductGrid from "@/components/ProductGrid";
 
-// Placeholder data for the grid
-const FEATURED_PRODUCTS = [
-  {
-    id: '1',
-    name: 'Spyderco Para 3',
-    image: 'https://img.youtube.com/vi/JUaAy-vX4JM/maxresdefault.jpg',
-    steel: 'CPM S45VN',
-    lock: 'Compression',
-    price: '$180'
-  },
-  {
-    id: '2',
-    name: 'Chris Reeve Sebenza 31',
-    image: 'https://img.youtube.com/vi/M3c3h4sZ9k0/maxresdefault.jpg',
-    steel: 'CPM S45VN',
-    lock: 'Reeve Integral Lock',
-    price: '$450'
-  },
-  {
-    id: '3',
-    name: 'Microtech Ultratech',
-    image: 'https://placehold.co/600x400/222/green?text=Ultratech',
-    steel: 'M390',
-    lock: 'OTF Auto',
-    price: '$310'
-  },
-  {
-    id: '4',
-    name: 'Benchmade 940 Osborne',
-    image: 'https://placehold.co/600x400/222/purple?text=940',
-    steel: 'S30V',
-    lock: 'Axis Lock',
-    price: '$205'
-  }
-];
+import { fetchRandomGuidesWithThumbnails } from "@/lib/alstra";
 
-export default function Home() {
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+export default async function Home() {
+  const guides = await fetchRandomGuidesWithThumbnails(10);
+
+  // Map guides to ProductCard format
+  const products = guides.map(guide => ({
+    id: guide.slug,
+    name: guide.title,
+    image: guide.thumbnail,
+    steel: guide.schema?.['Blade Steel'] || guide.schema?.['Steel'] || 'N/A',
+    lock: guide.schema?.['Lock Type'] || 'N/A',
+    price: guide.schema?.['Price (MSRP)'] || guide.schema?.['MSRP'] || 'Check Price',
+    url: guide.url
+  }));
+
   return (
     <div className="page-container">
 
@@ -51,7 +33,7 @@ export default function Home() {
         }}>
           Latest Drops
         </h2>
-        <ProductGrid products={FEATURED_PRODUCTS} />
+        <ProductGrid products={products} />
       </div>
     </div>
   );

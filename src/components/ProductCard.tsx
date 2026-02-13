@@ -3,8 +3,10 @@ import styles from './ProductCard.module.css';
 
 // Using a simple img tag for placeholder. In production, use Next.js Image component.
 const ProductCard = ({ product }: { product: any }) => {
+    const productUrl = product.url || `/review/${product.id}`;
+
     return (
-        <Link href={`/review/${product.id}`} className={styles.card}>
+        <Link href={productUrl} className={styles.card}>
             <div className={styles.imageContainer}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={product.image} alt={product.name} className={styles.image} />
