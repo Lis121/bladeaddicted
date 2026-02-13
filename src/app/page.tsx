@@ -5,6 +5,7 @@ import { fetchRandomGuidesWithThumbnails } from "@/lib/alstra";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+export const runtime = 'edge';
 
 export default async function Home() {
   const guides = await fetchRandomGuidesWithThumbnails(10);
