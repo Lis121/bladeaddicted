@@ -3,6 +3,8 @@ import { Metadata } from "next";
 import AlstraCta from "@/components/AlstraCta";
 import styles from "./page.module.css";
 
+export const runtime = 'edge';
+
 // Config - This interacts with your SaaS Platform (Do NOT change to localhost)
 const SAAS_API_URL = "https://www.alstras.com";
 const PROJECT_ID = "07ce1ac8-690a-4a27-917d-a49383bbc76b";
