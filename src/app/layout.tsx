@@ -19,6 +19,8 @@ export const metadata: Metadata = {
 };
 
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+
 
 export default function RootLayout({
   children,
@@ -30,6 +32,8 @@ export default function RootLayout({
       <body className={`${inter.variable} ${robotoCondensed.variable} antialiased`} suppressHydrationWarning={true}>
         <Header />
         <main>{children}</main>
+        <Footer />
+
         <Script
           strategy="afterInteractive"
           src={`https://www.googletagmanager.com/gtag/js?id=G-MJSK0X08X1`}
