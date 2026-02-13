@@ -1,0 +1,122 @@
+.container {
+    width: 100%;
+    max-width: 896px;
+    /* max-w-4xl */
+    margin: 0 auto;
+    padding: 3rem 1rem;
+    /* py-12 px-4 */
+}
+
+.title {
+    font-size: 2.25rem;
+    /* text-4xl */
+    font-weight: 700;
+    margin-bottom: 2rem;
+    /* mb-8 */
+    color: var(--text-primary);
+    font-family: var(--font-roboto);
+}
+
+.content {
+    color: var(--text-primary);
+    line-height: 1.75;
+}
+
+/* Typography styles to mimic prose */
+.content h1,
+.content h2,
+.content h3,
+.content h4,
+.content h5,
+.content h6 {
+    color: var(--text-primary);
+    margin-top: 2em;
+    margin-bottom: 1em;
+    font-weight: 700;
+    font-family: var(--font-roboto);
+}
+
+.content p {
+    margin-bottom: 1.25em;
+}
+
+.content ul,
+.content ol {
+    margin-bottom: 1.25em;
+    padding-left: 1.625em;
+}
+
+.content li {
+    margin-bottom: 0.5em;
+}
+
+.content a {
+    color: var(--accent-secondary);
+    text-decoration: underline;
+}
+
+.relatedSection {
+    margin-top: 3rem;
+    /* mt-12 */
+    border-top: 1px solid var(--border-primary);
+    padding-top: 2rem;
+    /* pt-8 */
+}
+
+.relatedTitle {
+    font-size: 1.5rem;
+    /* text-2xl */
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    /* mb-6 */
+    color: var(--text-primary);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    /* gap-4 */
+}
+
+@media (min-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.relatedCard {
+    display: block;
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-primary);
+    background-color: var(--bg-secondary);
+    transition: background-color 0.2s;
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.relatedCard:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--accent-primary);
+}
+
+.ctaContainer {
+    margin-top: 3rem;
+    /* mt-12 */
+    padding: 2rem;
+    /* p-8 */
+    background-color: var(--bg-secondary);
+    /* dark:bg-gray-900 */
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-primary);
+    text-align: center;
+}
+
+.ctaDescription {
+    font-size: 1.125rem;
+    /* text-lg */
+    color: var(--text-secondary);
+    /* dark:text-gray-300 */
+    margin-bottom: 1rem;
+}
