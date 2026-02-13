@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter, Roboto_Condensed } from "next/font/google";
 import "./globals.css";
 
@@ -29,6 +30,22 @@ export default function RootLayout({
       <body className={`${inter.variable} ${robotoCondensed.variable} antialiased`} suppressHydrationWarning={true}>
         <Header />
         <main>{children}</main>
+        <Script
+          strategy="afterInteractive"
+          src={`https://www.googletagmanager.com/gtag/js?id=G-MJSK0X08X1`}
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-MJSK0X08X1');
+            `,
+          }}
+        />
       </body>
     </html>
   );
