@@ -10,18 +10,27 @@ const ProductCard = ({ product }: { product: any }) => {
     const [imageSrc, setImageSrc] = useState(product.image);
 
     const handleImageError = () => {
-        // If current image is maxresdefault, try hqdefault
-        if (imageSrc && imageSrc.includes('maxresdefault.jpg')) {
-            setImageSrc(imageSrc.replace('maxresdefault.jpg', 'hqdefault.jpg'));
+        // Fallback chain: maxresdefault -> sddefault -> hqdefault
+        if (imageSrc) {
+            if (imageSrc.includes('maxresdefault.jpg')) {
+                setImageSrc(imageSrc.replace('maxresdefault.jpg', 'sddefault.jpg'));
+            } else if (imageSrc.includes('sddefault.jpg')) {
+                setImageSrc(imageSrc.replace('sddefault.jpg', 'hqdefault.jpg'));
+            }
         }
     };
 
     const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
         const img = e.currentTarget;
-        // YouTube returns a 120x90 placeholder image when maxresdefault is missing but returns 200 OK.
-        // If we detect this specific width, we treat it as an error and fallback.
-        if (img.naturalWidth === 120 && imageSrc.includes('maxresdefault.jpg')) {
-            setImageSrc(imageSrc.replace('maxresdefault.jpg', 'hqdefault.jpg'));
+
+        // YouTube returns a 120x90 placeholder image when maxresdefault/sddefault is missing but returns 200 OK.
+        // If we detect this specific width, we treat it as an error and trigger the next fallback.
+        if (img.naturalWidth === 120) {
+            if (imageSrc && imageSrc.includes('maxresdefault.jpg')) {
+                setImageSrc(imageSrc.replace('maxresdefault.jpg', 'sddefault.jpg'));
+            } else if (imageSrc && imageSrc.includes('sddefault.jpg')) {
+                setImageSrc(imageSrc.replace('sddefault.jpg', 'hqdefault.jpg'));
+            }
         }
     };
 
