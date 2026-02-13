@@ -35,7 +35,7 @@ export default async function PseoPage(props: Props) {
 
     return (
         <main className={styles.container}>
-            <h1 className={styles.title}>{data.title}</h1>
+
 
             {/* 
                Tip: Use @tailwindcss/typography plugin for nice styling of raw HTML.
