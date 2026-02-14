@@ -178,3 +178,86 @@ export async function fetchGuidesExcluding(count: number, excludeSlugs: string[]
 
     return detailedGuides;
 }
+
+/**
+ * Searches for guides by title or slug
+ */
+export async function searchGuides(query: string): Promise<Guide[]> {
+    if (!query || query.trim().length < 2) return [];
+
+    const lowerQuery = query.toLowerCase().trim();
+
+    // 1. Get all guides (metadata only)
+    const allGuides = await fetchAllGuides();
+
+    if (allGuides.length === 0) return [];
+
+    // 2. Filter locally
+    const matches = allGuides.filter(g =>
+        g.title.toLowerCase().includes(lowerQuery) ||
+        g.slug.toLowerCase().includes(lowerQuery)
+    );
+
+    if (matches.length === 0) return [];
+
+    // 3. Fetch details for matched items (limit to top 20 to avoid excessive requests)
+    const topMatches = matches.slice(0, 20);
+    const BATCH_SIZE = 5;
+    const detailedGuides: Guide[] = [];
+
+    for (let i = 0; i < topMatches.length; i += BATCH_SIZE) {
+        const batch = topMatches.slice(i, i + BATCH_SIZE);
+
+        const batchResults = await Promise.all(
+            batch.map(async (guide) => {
+                const details = await fetchGuideContent(guide.slug);
+                let thumbnail = null;
+
+                if (details && details.contentHtml) {
+                    const videoId = getYoutubeVideoId(details.contentHtml);
+                    if (videoId) {
+                        thumbnail = getBestYoutubeThumbnail(videoId);
+                    }
+                }
+
+                return {
+                    ...guide,
+                    thumbnail: thumbnail || 'https://placehold.co/600x400/222/333?text=Review',
+                    url: `/guides/${guide.slug}`,
+                    schema: details?.schema || {}
+                };
+            })
+        );
+
+        detailedGuides.push(...batchResults);
+    }
+
+    return detailedGuides;
+}
+
+/**
+ * Gets lightweight suggestions for autocomplete
+ * Returns only metadata (slug, title, type) to be fast
+ */
+export async function getGuideSuggestions(query: string, limit: number = 5): Promise<Guide[]> {
+    if (!query || query.trim().length < 2) return [];
+
+    const lowerQuery = query.toLowerCase().trim();
+
+    // 1. Get all guides (metadata only)
+    const allGuides = await fetchAllGuides();
+
+    if (allGuides.length === 0) return [];
+
+    // 2. Filter locally
+    const matches = allGuides.filter(g =>
+        g.title.toLowerCase().includes(lowerQuery) ||
+        g.slug.toLowerCase().includes(lowerQuery)
+    );
+
+    // 3. Return top N matches
+    return matches.slice(0, limit).map(g => ({
+        ...g,
+        url: `/guides/${g.slug}`
+    }));
+}

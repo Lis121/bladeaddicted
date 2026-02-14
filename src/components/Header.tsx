@@ -1,12 +1,56 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import styles from './Header.module.css';
+import { getSuggestionsAction } from '@/app/actions/search';
+import { Guide } from '@/lib/alstra';
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+    const [searchQuery, setSearchQuery] = useState('');
+    const [suggestions, setSuggestions] = useState<Guide[]>([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const searchContainerRef = useRef<HTMLFormElement>(null);
+    const router = useRouter();
+
+    // Close suggestions when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+                setShowSuggestions(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    // Debounced search for suggestions
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(async () => {
+            if (searchQuery.trim().length >= 2) {
+                try {
+                    const results = await getSuggestionsAction(searchQuery);
+                    setSuggestions(results);
+                    setShowSuggestions(true);
+                } catch (error) {
+                    console.error("Error fetching suggestions:", error);
+                    setSuggestions([]);
+                }
+            } else {
+                setSuggestions([]);
+                setShowSuggestions(false);
+            }
+        }, 300);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [searchQuery]);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -16,6 +60,28 @@ const Header = () => {
     const toggleSearch = () => {
         setIsSearchOpen(!isSearchOpen);
         if (isMenuOpen) setIsMenuOpen(false);
+        setTimeout(() => {
+            const input = document.querySelector(`.${styles.searchInput}`) as HTMLInputElement;
+            if (input) input.focus();
+        }, 100);
+    };
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            setIsSearchOpen(false);
+            setShowSuggestions(false);
+            router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+            // Keep query for context or clear it? Clearing for now.
+            setSearchQuery('');
+        }
+    };
+
+    const handleSuggestionClick = (url: string) => {
+        setIsSearchOpen(false);
+        setShowSuggestions(false);
+        setSearchQuery('');
+        router.push(url);
     };
 
     return (
@@ -58,19 +124,45 @@ const Header = () => {
             </nav>
 
             {/* Search Bar */}
-            <div className={`${styles.searchContainer} ${isSearchOpen ? styles.searchOpen : ''}`}>
+            <form
+                ref={searchContainerRef}
+                onSubmit={handleSearch}
+                className={`${styles.searchContainer} ${isSearchOpen ? styles.searchOpen : ''}`}
+            >
                 <input
                     type="text"
                     placeholder="SEARCH GEAR..."
                     className={styles.searchInput}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onFocus={() => {
+                        if (searchQuery.trim().length >= 2 && suggestions.length > 0) {
+                            setShowSuggestions(true);
+                        }
+                    }}
                 />
-                <span className={styles.searchIcon}>
+                <button type="submit" className={styles.searchSubmitBtn} aria-label="Submit Search">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
-                </span>
-            </div>
+                </button>
+
+                {/* Autocomplete Suggestions */}
+                {showSuggestions && suggestions.length > 0 && (
+                    <div className={styles.suggestionsDropdown}>
+                        {suggestions.map((guide) => (
+                            <div
+                                key={guide.slug}
+                                className={styles.suggestionItem}
+                                onClick={() => handleSuggestionClick(`/guides/${guide.slug}`)}
+                            >
+                                {guide.title}
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </form>
         </header>
     );
 };
