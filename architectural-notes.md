@@ -9,3 +9,6 @@
 ## Components
 - **Footer**: Global footer component `src/components/Footer.tsx` added to `src/app/layout.tsx`. Implements "Tactical Noir" theme with navigation links, branding, and legal links.
 - **Homepage (src/app/page.tsx)**: Now dynamically fetches 10 random guides from Alstra API on each request/session. Uses `src/lib/alstra.ts` to fetch data and extract YouTube thumbnails from content.
+
+## Configuration
+- **Redirects**: `/blog` redirects to `/` permanently in `next.config.ts`.
