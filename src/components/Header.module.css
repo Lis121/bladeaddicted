@@ -76,3 +76,33 @@
     color: var(--text-secondary);
     pointer-events: none;
 }
+
+@media (max-width: 768px) {
+    .header {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .nav {
+        gap: 1rem;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .searchContainer {
+        width: 100%;
+    }
+
+    .searchInput {
+        width: 100%;
+    }
+
+    .searchInput:focus {
+        width: 100%;
+    }
+
+    .logo {
+        font-size: 1.25rem;
+    }
+}

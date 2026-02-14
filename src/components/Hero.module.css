@@ -98,3 +98,27 @@
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(255, 95, 31, 0.4);
 }
+
+@media (max-width: 768px) {
+    .hero {
+        height: 70vh;
+    }
+
+    .title {
+        font-size: 2.5rem;
+    }
+
+    .description {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .ctaButton {
+        padding: 0.8rem 2rem;
+        font-size: 0.9rem;
+    }
+
+    .content {
+        padding: 0 1rem;
+    }
+}

@@ -12,6 +12,13 @@
     width: 100%;
 }
 
+@media (max-width: 640px) {
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
 .loadMoreContainer {
     display: flex;
     justify-content: center;
