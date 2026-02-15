@@ -43,13 +43,14 @@ export function getBestYoutubeThumbnail(videoId: string): string {
 
 /**
  * Fetches all guides (type=pseo) from the API
+ * Now with higher limit to support growing dataset (200+)
  */
 async function fetchAllGuides(): Promise<Guide[]> {
     try {
-        // Fetch with a high limit to get all guides
-        const res = await fetch(`${SAAS_API_URL}/api/public/pages?projectId=${PROJECT_ID}&type=pseo&limit=100`, {
+        // Fetch with a high limit to get all guides (increased from 100 to 300)
+        const res = await fetch(`${SAAS_API_URL}/api/public/pages?projectId=${PROJECT_ID}&type=pseo&limit=300`, {
             next: { revalidate: 3600 },
-            signal: AbortSignal.timeout(10000) // 10s timeout
+            signal: AbortSignal.timeout(15000) // increased timeout for larger payload
         });
 
         if (!res.ok) return [];
@@ -61,6 +62,62 @@ async function fetchAllGuides(): Promise<Guide[]> {
         return [];
     }
 }
+
+/**
+ * Public wrapper to get all pSEO guides
+ */
+export async function getAllPseoGuides(): Promise<Guide[]> {
+    return await fetchAllGuides();
+}
+
+/**
+ * Filters guides by category/type (e.g., 'Folding Knife', 'Fixed Blade')
+ * This looks at the `schema.Type` or `schema.productType` field
+ */
+export async function getGuidesByCategory(category: string): Promise<Guide[]> {
+    const allGuides = await fetchAllGuides();
+    if (allGuides.length === 0) return [];
+
+    const lowerCategory = category.toLowerCase();
+
+    // Fetch details for all guides to check schema? 
+    // Ideally, we should request this filter from the API, but for now we filter client-side (server-side in Next.js)
+    // To make this efficient, we might need to fetch content details for *all* 200 items which is heavy.
+    // OPTIMIZATION: Does 'fetchAllGuides' return schema? 
+    // Based on `view_file` output earlier, `fetchAllGuides` returns `pages` array. 
+    // Usually list endpoints return minimal data.
+    // If we need schema, we have to fetch details. 
+    // 200 requests is too many. 
+    // STRATEGY CHECK: The User mentioned "We have approximately 200 pSEO pages".
+    // fetching 200 pages details sequentially or even parallel is slow.
+    // We will try to fetch details in batches, or check if the list endpoint returns any tags/metadata we can use.
+
+    // For now, let's implement a batch fetch for *all* items to build the index. 
+    // Since this is static generation (mostly), it might be okay.
+    // But for a dynamic page, it will be slow.
+    // Let's assume for now we need to fetch details to get the category.
+
+    // BETTER APPROACH: Use `fetchRandomGuidesWithThumbnails` logic but for specific category?
+    // Let's first get all guides, then fetch details for them in parallel batches, 
+    // then filter. This is heavy but necessary if the list endpoint doesn't have the data.
+
+    // Wait, the user said "Vi har ju i header sidorna /folding-knives och fixed-blades".
+    // Maybe the URL or Title contains the clue?
+    // "Benchmade Bugout 535" -> Folding.
+    // "Ka-Bar USMC" -> Fixed.
+    // It's not reliable to guess from title. We need the schema.
+
+    // Let's fetch details for ALL guides. 
+    // We will cache this aggressively.
+
+    const detailedGuides = await fetchAllGuidesWithDetails();
+
+    return detailedGuides.filter(g => {
+        const type = g.schema?.Type || g.schema?.productType || '';
+        return type.toLowerCase().includes(lowerCategory);
+    });
+}
+
 
 /**
  * Fetches detailed content for a specific guide using slug
@@ -261,3 +318,104 @@ export async function getGuideSuggestions(query: string, limit: number = 5): Pro
         url: `/guides/${g.slug}`
     }));
 }
+
+/**
+ * HELPER: Fetches details for ALL guides to allow deep filtering.
+ * CAUTION: This performs many API requests. Use with caching.
+ */
+async function fetchAllGuidesWithDetails(): Promise<Guide[]> {
+    const allGuides = await fetchAllGuides();
+    if (allGuides.length === 0) return [];
+
+    const BATCH_SIZE = 10;
+    const detailedGuides: Guide[] = [];
+
+    // Process in batches
+    for (let i = 0; i < allGuides.length; i += BATCH_SIZE) {
+        const batch = allGuides.slice(i, i + BATCH_SIZE);
+        const batchResults = await Promise.all(
+            batch.map(async (guide) => {
+                const details = await fetchGuideContent(guide.slug);
+                let thumbnail = null;
+
+                // Try to get thumbnail from content if not present
+                if (details && details.contentHtml) {
+                    const videoId = getYoutubeVideoId(details.contentHtml);
+                    if (videoId) {
+                        thumbnail = getBestYoutubeThumbnail(videoId);
+                    }
+                }
+
+                return {
+                    ...guide,
+                    thumbnail: thumbnail || 'https://placehold.co/600x400/222/333?text=Review',
+                    url: `/guides/${guide.slug}`,
+                    schema: details?.schema || {}
+                };
+            })
+        );
+        detailedGuides.push(...batchResults);
+    }
+    return detailedGuides;
+}
+
+/**
+ * Extracts and returns all unique brands from the guides.
+ */
+export async function getUniqueBrands(): Promise<string[]> {
+    const guides = await fetchAllGuidesWithDetails();
+    const brands = new Set<string>();
+
+    guides.forEach(g => {
+        const brand = g.schema?.Brand || g.schema?.brand || g.schema?.Manufacturer;
+        if (brand) {
+            brands.add(brand);
+        }
+    });
+
+    return Array.from(brands).sort();
+}
+
+/**
+ * Extracts and returns all unique blade steels.
+ */
+export async function getUniqueSteels(): Promise<string[]> {
+    const guides = await fetchAllGuidesWithDetails();
+    const steels = new Set<string>();
+
+    guides.forEach(g => {
+        const steel = g.schema?.BladeSteel || g.schema?.bladeSteel || g.schema?.Steel;
+        if (steel) {
+            steels.add(steel);
+        }
+    });
+
+    return Array.from(steels).sort();
+}
+
+/**
+ * Returns guides filtered by a specific brand.
+ */
+export async function getGuidesByBrand(brand: string): Promise<Guide[]> {
+    const guides = await fetchAllGuidesWithDetails();
+    const lowerBrand = brand.toLowerCase();
+
+    return guides.filter(g => {
+        const b = g.schema?.Brand || g.schema?.brand || g.schema?.Manufacturer || '';
+        return b.toLowerCase() === lowerBrand;
+    });
+}
+
+/**
+ * Returns guides filtered by a specific steel.
+ */
+export async function getGuidesBySteel(steel: string): Promise<Guide[]> {
+    const guides = await fetchAllGuidesWithDetails();
+    const lowerSteel = steel.toLowerCase();
+
+    return guides.filter(g => {
+        const s = g.schema?.BladeSteel || g.schema?.bladeSteel || g.schema?.Steel || '';
+        return s.toLowerCase().includes(lowerSteel); // Includes because sometimes it is "CPM S30V" vs "S30V"
+    });
+}
+
